@@ -3,13 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { apiUrl, UserIdContext } from "../App";
 import axios from "axios";
 import NavBar from "../components/NavBar";
+import PostCard from "../components/PostCard";
 
 function HomePage() {
   const navigate = useNavigate();
   const { userId, setUserId } = useContext(UserIdContext);
   const [recentPosts, setRecentPosts] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState();
 
   async function getRecentPost() {
     const response = await axios.get(`${apiUrl}/posts/recent`, {
@@ -29,14 +30,14 @@ function HomePage() {
       });
       setSearchResults(response.data);
     } else {
-      setSearchResults([]);
+      setSearchResults(undefined);
     }
   }
 
   async function handleKeywordChange(event) {
     setSearchKeyword(event.target.value);
     if (event.target.value === "") {
-      setSearchResults([]);
+      setSearchResults(undefined);
     }
   }
 
@@ -50,13 +51,13 @@ function HomePage() {
 
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
-      <NavBar setUserId={setUserId} />
+      <NavBar userId={userId} setUserId={setUserId} />
 
       <div className="mb-6">
         <form onSubmit={handleSearchSubmit} className="flex space-x-2">
           <input
             type="text"
-            placeholder="Explore Posts..."
+            placeholder="Discover Posts..."
             value={searchKeyword}
             onChange={handleKeywordChange}
             className="flex-grow px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
@@ -71,76 +72,17 @@ function HomePage() {
       </div>
 
       <h2 className="text-xl font-semibold mb-4">
-        {searchResults.length > 0 ? "Search Results" : "Recent Posts"}
+        {searchResults ? "Search Results" : "Recent Posts"}
       </h2>
-
       <div className="space-y-4">
-        {searchResults.length > 0 ? (
-          searchResults.map((post) => (
-            <div
-              key={post.id}
-              className="bg-white shadow rounded-md p-4 flex items-center justify-between"
-            >
-              <div>
-                <div className="flex items-center">
-                  {post.author.avatarUrl && (
-                    <img
-                      src={post.author.avatarUrl}
-                      alt={`${post.author.username}'s avatar`}
-                      className="w-8 h-8 rounded-full mr-2"
-                    />
-                  )}
-                  <p className="font-semibold">{post.author.username}</p>
-                </div>
-                <h3 className="text-lg font-medium">{post.title}</h3>
-                <p>{post.content}</p>
-                <div className="mt-1">
-                  <span>{post._count.likedBy} likes</span>
-                </div>
-              </div>
-              {post.postImageUrl && (
-                <img
-                  src={post.postImageUrl}
-                  alt={`Post ${post.id}`}
-                  className="w-24 h-24 rounded-md ml-4 object-cover"
-                />
-              )}
-            </div>
-          ))
-        ) : recentPosts.length > 0 ? (
-          recentPosts.map((post) => (
-            <div
-              key={post.id}
-              className="bg-white shadow rounded-md p-4 flex items-center justify-between"
-            >
-              <div>
-                <div className="flex items-center">
-                  {post.author.avatarUrl && (
-                    <img
-                      src={post.author.avatarUrl}
-                      alt={`${post.author.username}'s avatar`}
-                      className="w-8 h-8 rounded-full mr-2"
-                    />
-                  )}
-                  <p className="font-semibold">{post.author.username}</p>
-                </div>
-                <h3 className="text-lg font-medium">{post.title}</h3>
-                <p>{post.content}</p>
-                <div className="mt-1">
-                  <span>{post._count.likedBy} likes</span>
-                </div>
-              </div>
-              {post.postImageUrl && (
-                <img
-                  src={post.postImageUrl}
-                  alt={`Post ${post.id}`}
-                  className="w-24 h-24 rounded-md ml-4 object-cover"
-                />
-              )}
-            </div>
-          ))
-        ) : (
+        {searchResults?.length === 0 ? (
+          <p className="text-gray-500">No Result found.</p>
+        ) : searchResults ? (
+          searchResults.map((post) => <PostCard key={post.id} post={post} />)
+        ) : recentPosts.length === 0 ? (
           <p className="text-gray-500">No post yet.</p>
+        ) : (
+          recentPosts.map((post) => <PostCard key={post.id} post={post} />)
         )}
       </div>
     </div>

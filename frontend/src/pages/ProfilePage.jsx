@@ -1,46 +1,39 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { apiUrl, UserIdContext } from "../App";
+import NavBar from "../components/NavBar";
 import axios from "axios";
 
 function ProfilePage() {
   const navigate = useNavigate();
-  const { userId } = useContext(UserIdContext);
-  const [userProfile, setUserProfile] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
+  const { userId, setUserId } = useContext(UserIdContext);
+  const [userProfile, setUserProfile] = useState();
+  const [imageFile, setImageFile] = useState();
   const [bioInput, setBioInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProfileData = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/profile`, {
-          withCredentials: true,
-        });
-        setUserProfile(response.data);
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    if (!userId) {
-      navigate("/");
-    } else {
-      fetchProfileData();
+  async function getProfileData() {
+    try {
+      const response = await axios.get(`${apiUrl}/profile`, {
+        withCredentials: true,
+      });
+      setUserProfile(response.data);
+    } catch (error) {
+      console.error("Error fetching profile:", error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [userId, navigate]);
+  }
 
-  const handleImageChange = (e) => {
+  function handleImageChange(e) {
     setImageFile(e.target.files[0]);
-  };
+  }
 
-  const handleBioChange = (e) => {
+  function handleBioChange(e) {
     setBioInput(e.target.value);
-  };
+  }
 
-  const handleSubmitImage = async (e) => {
+  async function handleSubmitImage(e) {
     e.preventDefault();
 
     if (imageFile) {
@@ -54,14 +47,15 @@ function ProfilePage() {
             "Content-Type": "multipart/form-data",
           },
         });
+        getProfileData();
         console.log("Profile image updated successfully!");
       } catch (error) {
         console.error("Error updating profile image:", error);
       }
     }
-  };
+  }
 
-  const handleSubmitBio = async (e) => {
+  async function handleSubmitBio(e) {
     e.preventDefault();
 
     try {
@@ -70,14 +64,23 @@ function ProfilePage() {
         { bio: bioInput },
         { withCredentials: true }
       );
+      getProfileData();
       console.log("Bio updated successfully!");
     } catch (error) {
       console.error("Error updating bio:", error);
     }
-  };
+  }
+
+  useEffect(() => {
+    if (!userId) {
+      navigate("/");
+    } else {
+      getProfileData();
+    }
+  }, [userId, navigate]);
 
   return (
-    <div className="container mx-auto px-4 py-8 min-h-screen">
+    <div className="mx-auto px-4 py-8 min-h-screen max-w-7xl">
       <div className="flex justify-start items-center mb-6">
         <Link
           to="/home"
@@ -95,13 +98,13 @@ function ProfilePage() {
         <div className="flex flex-col items-center">
           <div className="mb-6">
             <img
-              src={userProfile.profile.avatarUrl}
+              src={userProfile.avatarUrl}
               alt="Profile"
               className="rounded-full w-48 h-48 object-cover shadow-lg"
             />
           </div>
 
-          <div className="bg-white shadow rounded-md p-6 w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
+          <div className="bg-white shadow rounded-md p-6 w-full ">
             <div className="mb-4">
               <label
                 htmlFor="username"
@@ -120,12 +123,12 @@ function ProfilePage() {
                 Bio
               </label>
               <p className="text-gray-900">
-                {userProfile.profile.bio || "No bio yet."}
+                {userProfile.bio || "No bio yet."}
               </p>
             </div>
           </div>
 
-          <div className="mt-8 space-y-4 w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
+          <div className="mt-8 space-y-4 w-full ">
             <form onSubmit={handleSubmitImage} className="mb-4">
               <label
                 htmlFor="profileImage"

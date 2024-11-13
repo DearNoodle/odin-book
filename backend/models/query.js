@@ -57,6 +57,23 @@ async function getUsername(req) {
   });
 }
 
+async function getUserInfo(req) {
+  return await prisma.user.findUnique({
+    where: { id: req.params.id },
+    select: {
+      username: true,
+      avatarUrl: true,
+      bio: true,
+      _count: {
+        select: {
+          followedBy: true,
+          posts: true,
+        },
+      },
+    },
+  });
+}
+
 async function getChatMessages(req) {
   return await prisma.message.findMany({
     where: {
@@ -93,19 +110,14 @@ async function createMessage(req) {
   });
 }
 
-async function getRecentChatters(req) {
-  const userId = req.user.id;
-
-  const recentUsers = await prisma.$queryRaw`
-    SELECT * FROM (
-      SELECT "toUserId" as userId FROM messages WHERE "fromUserId" = ${userId}
-      UNION
-      SELECT "fromUserId" as userId FROM messages WHERE "toUserId" = ${userId}
-    ) AS recent_user_ids
-    JOIN users u ON u.id = recent_user_ids.userId;
-  `;
-
-  return recentUsers;
+async function getFollowedUsers(req) {
+  const user = await prisma.user.findUnique({
+    where: { id: req.user.id },
+    select: {
+      follows: true,
+    },
+  });
+  return user.follows;
 }
 
 async function getRecentPosts() {
@@ -115,6 +127,26 @@ async function getRecentPosts() {
     include: {
       author: {
         select: {
+          id: true,
+          username: true,
+          avatarUrl: true,
+        },
+      },
+      _count: {
+        select: { likedBy: true },
+      },
+    },
+  });
+}
+
+async function getUserPosts(req) {
+  return prisma.post.findMany({
+    where: { authorId: req.params.id },
+    orderBy: { createdAt: 'desc' },
+    include: {
+      author: {
+        select: {
+          id: true,
           username: true,
           avatarUrl: true,
         },
@@ -138,7 +170,7 @@ async function getSearchUsers(req) {
 }
 
 async function getSearchPosts(req) {
-  return await prisma.post.findMany({
+  const posts = await prisma.post.findMany({
     where: {
       OR: [
         {
@@ -169,6 +201,7 @@ async function getSearchPosts(req) {
       },
     },
   });
+  return posts || [];
 }
 
 module.exports = {
@@ -177,10 +210,12 @@ module.exports = {
   updateProfileImage,
   updateProfileBio,
   getUsername,
+  getUserInfo,
   getChatMessages,
   createMessage,
-  getRecentChatters,
+  getFollowedUsers,
   getRecentPosts,
+  getUserPosts,
   getSearchUsers,
   getSearchPosts,
 };

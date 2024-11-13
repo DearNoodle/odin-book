@@ -6,15 +6,15 @@ import NavBar from "../components/NavBar";
 function FollowsPage() {
   const navigate = useNavigate();
   const { userId, setUserId } = useContext(UserIdContext);
-  const [recentChats, setRecentChats] = useState([]);
+  const [userFollows, setUserFollows] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
-  async function getRecentChat() {
-    const response = await axios.get(`${apiUrl}/recent-chat`, {
+  async function getFollowedUsers() {
+    const response = await axios.get(`${apiUrl}/follows`, {
       withCredentials: true,
     });
-    setRecentChats(response.data);
+    setUserFollows(response.data);
   }
 
   async function handleSearch(event) {
@@ -33,18 +33,18 @@ function FollowsPage() {
       navigate("/");
       return;
     }
-    getRecentChat();
+    getFollowedUsers();
   }, []);
 
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
-      <NavBar setUserId={setUserId} />
+      <NavBar userId={userId} setUserId={setUserId} />
 
       <div className="mb-6">
         <form onSubmit={handleSearch} className="flex space-x-2">
           <input
             type="text"
-            placeholder="Search for users..."
+            placeholder="Search for Users..."
             value={searchKeyword}
             required
             onChange={(e) => setSearchKeyword(e.target.value)}
@@ -60,7 +60,7 @@ function FollowsPage() {
       </div>
 
       <h2 className="text-xl font-semibold mb-4">
-        {searchResults.length > 0 ? "Search Results" : "Recent Conversations"}
+        {searchResults.length > 0 ? "Search Results" : "Your Follows"}
       </h2>
 
       <div className="space-y-4">
@@ -74,15 +74,15 @@ function FollowsPage() {
                 {user.username.charAt(0).toUpperCase() + user.username.slice(1)}
               </p>
               <Link
-                to={`/chat/${user.id}`}
+                to={`/user/${user.id}`}
                 className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
               >
-                Chat
+                View
               </Link>
             </div>
           ))
-        ) : recentChats.length > 0 ? (
-          recentChats.map((user) => (
+        ) : userFollows.length > 0 ? (
+          userFollows.map((user) => (
             <div
               key={user.id}
               className="bg-white shadow rounded-md p-4 flex items-center justify-between"
@@ -99,7 +99,7 @@ function FollowsPage() {
             </div>
           ))
         ) : (
-          <p className="text-gray-500">No recent chats yet.</p>
+          <p className="text-gray-500">No followed user yet.</p>
         )}
       </div>
     </div>

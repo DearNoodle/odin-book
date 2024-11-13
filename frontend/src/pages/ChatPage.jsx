@@ -14,7 +14,7 @@ function ChatPage() {
 
   async function getChatterName() {
     try {
-      const response = await axios.get(`${apiUrl}/user/${chatterId}`, {
+      const response = await axios.get(`${apiUrl}/user/${chatterId}/name`, {
         withCredentials: true,
       });
       setChatterName(response.data.username);

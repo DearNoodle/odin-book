@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const controller = require('../controllers/appController');
+const controller = require('../controllers/profileController');
 const { jwtAuth } = require('./middlewares/routeAuth');
 const { upload } = require('../configs/cloudinaryConfig');
 

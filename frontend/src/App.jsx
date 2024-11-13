@@ -7,6 +7,8 @@ import HomePage from "./pages/HomePage";
 import ChatPage from "./pages/ChatPage";
 import FollowsPage from "./pages/FollowsPage";
 import ProfilePage from "./pages/ProfilePage";
+import UserPage from "./pages/UserPage";
+import PostPage from "./pages/PostPage";
 import axios from "axios";
 
 export const apiUrl = "http://localhost:8080/api";
@@ -51,6 +53,8 @@ function App() {
           <Route path="/follows" element={<FollowsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/chat/:id" element={<ChatPage />} />
+          <Route path="/user/:id" element={<UserPage />} />
+          <Route path="/post/:id" element={<PostPage />} />
         </Routes>
       </BrowserRouter>
     </UserIdContext.Provider>
