@@ -28,7 +28,7 @@ app.use(passport.initialize());
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-const routers = [authRouter, appRouter, fetchRouter];
+const routers = [authRouter, appRouter, fetchRouter, profileRouter];
 
 routers.forEach((router) => {
   app.use('/api', router);

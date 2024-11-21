@@ -10,28 +10,44 @@ function UserPage() {
   const { id: pageUserId } = useParams();
   const [pageUserInfo, setPageUserInfo] = useState();
   const [pageUserPosts, setPageUserPosts] = useState();
+  const [followStatus, setFollowStatus] = useState(false);
 
-  async function getPageUserInfo() {
-    const response = await axios.get(`${apiUrl}/user/${pageUserId}`, {
+  async function fetchData() {
+    const response = await axios.get(`${apiUrl}/user-page/user/${pageUserId}`, {
       withCredentials: true,
     });
-    setPageUserInfo(response.data);
+    const data = response.data;
+    setPageUserInfo(data.userInfo);
+    setPageUserPosts(data.posts);
+    setFollowStatus(data.followStatus);
   }
 
-  async function getPageUserPosts() {
-    const response = await axios.get(`${apiUrl}/user/${pageUserId}/posts`, {
-      withCredentials: true,
-    });
-    setPageUserPosts(response.data);
+  async function handleUpdateFollow(req) {
+    if (userId !== pageUserId) {
+      await axios.put(
+        `${apiUrl}/follow/user/${pageUserId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      fetchData();
+    } else {
+      console.error("Self Following Action Denied.");
+    }
+  }
+
+  async function handleCreatePost(event) {
+    event.preventDefault();
+    await axios.post(`${apiUrl}/post`, {});
   }
 
   useEffect(() => {
     if (!userId) {
-      navigate("/home");
+      navigate("/");
       return;
     }
-    getPageUserInfo();
-    getPageUserPosts();
+    fetchData();
   }, []);
   return (
     <div className="mx-auto px-4 py-8 min-h-screen max-w-7xl">
@@ -50,6 +66,13 @@ function UserPage() {
         <p>{pageUserInfo?.bio}</p>
         <p>{pageUserInfo?._count.followedBy} Followers</p>
       </div>
+      {userId !== pageUserId ? (
+        <button onClick={handleUpdateFollow}>
+          {followStatus ? "Unfollow" : "Follow"}
+        </button>
+      ) : (
+        <form onSubmit={handleCreatePost}></form>
+      )}
 
       <h1 className="text-3xl font-bold text-center mb-8">
         {userId === pageUserId ? "Your" : pageUserInfo?.username} Posts (

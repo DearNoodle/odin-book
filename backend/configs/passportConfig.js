@@ -5,6 +5,7 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const { PrismaClient } = require('@prisma/client');
+const query = require('../models/query');
 
 const prisma = new PrismaClient();
 
@@ -52,7 +53,7 @@ const verifyLocal = async (username, password, done) => {
     }
 
     if (!password) {
-      return done(null, false, { message: 'Invalid password' });
+      return done(null, false, { message: 'No password provided' });
     }
 
     return done(null, user);
@@ -79,15 +80,7 @@ const verifyGithub = async (accessToken, refreshToken, profile, done) => {
     let user = await prisma.user.findUnique({ where: { githubId: profile.id } });
 
     if (!user) {
-      user = await prisma.user.create({
-        data: {
-          username: profile.username || profile.displayName,
-          githubId: profile.id,
-          avatarUrl:
-            'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg', // Directly on user
-          bio: "This Person hasn't written no Bio yet",
-        },
-      });
+      user = await query.createGHUser(profile);
     }
 
     return done(null, user);

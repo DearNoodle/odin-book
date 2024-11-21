@@ -12,25 +12,12 @@ function ProfilePage() {
   const [bioInput, setBioInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
-  async function getProfileData() {
-    try {
-      const response = await axios.get(`${apiUrl}/profile`, {
-        withCredentials: true,
-      });
-      setUserProfile(response.data);
-    } catch (error) {
-      console.error("Error fetching profile:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  function handleImageChange(e) {
-    setImageFile(e.target.files[0]);
-  }
-
-  function handleBioChange(e) {
-    setBioInput(e.target.value);
+  async function fetchData() {
+    const response = await axios.get(`${apiUrl}/profile-page`, {
+      withCredentials: true,
+    });
+    setUserProfile(response.data);
+    setIsLoading(false);
   }
 
   async function handleSubmitImage(e) {
@@ -47,7 +34,7 @@ function ProfilePage() {
             "Content-Type": "multipart/form-data",
           },
         });
-        getProfileData();
+        fetchData();
         console.log("Profile image updated successfully!");
       } catch (error) {
         console.error("Error updating profile image:", error);
@@ -64,7 +51,7 @@ function ProfilePage() {
         { bio: bioInput },
         { withCredentials: true }
       );
-      getProfileData();
+      fetchData();
       console.log("Bio updated successfully!");
     } catch (error) {
       console.error("Error updating bio:", error);
@@ -75,7 +62,7 @@ function ProfilePage() {
     if (!userId) {
       navigate("/");
     } else {
-      getProfileData();
+      fetchData();
     }
   }, [userId, navigate]);
 
@@ -86,7 +73,7 @@ function ProfilePage() {
           to="/home"
           className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
         >
-          Back to Chat
+          Back
         </Link>
       </div>
 
@@ -140,7 +127,7 @@ function ProfilePage() {
                 type="file"
                 id="profileImage"
                 accept="image/*"
-                onChange={handleImageChange}
+                onChange={(e) => setImageFile(e.target.files[0])}
                 className="w-full"
               />
               <button
@@ -161,7 +148,7 @@ function ProfilePage() {
               <textarea
                 id="bioInput"
                 value={bioInput}
-                onChange={handleBioChange}
+                onChange={(e) => setBioInput(e.target.value)}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
               <button

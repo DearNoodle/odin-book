@@ -21,10 +21,13 @@ function PostCard({ post }) {
             <p className="font-semibold">{post.author.username}</p>
           </Link>
         </div>
-        <h3 className="text-lg font-medium">{post.title}</h3>
-        <p>{post.content}</p>
+        <Link to={`/post/${post.id}`}>
+          <h3 className="text-lg font-medium">{post.title}</h3>
+          <p>{post.content}</p>
+        </Link>
         <div className="mt-1">
-          <span>{post._count.likedBy} likes</span>
+          <span>{post._count.likedBy} likes</span>{" "}
+          <span>{post._count.comments} comments</span>
         </div>
       </div>
       {post.postImageUrl && (

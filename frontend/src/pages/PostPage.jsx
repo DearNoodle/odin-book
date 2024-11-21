@@ -9,7 +9,7 @@ function PostPage() {
 
   useEffect(() => {
     if (!userId) {
-      navigate("/home");
+      navigate("/");
       return;
     }
   }, []);
