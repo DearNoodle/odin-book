@@ -12,6 +12,10 @@ function UserPage() {
   const [pageUserPosts, setPageUserPosts] = useState();
   const [followStatus, setFollowStatus] = useState(false);
 
+  const [postTitle, setPostTitle] = useState("");
+  const [postImageFile, setPostImageFile] = useState();
+  const [postContent, setPostContent] = useState("");
+
   async function fetchData() {
     const response = await axios.get(`${apiUrl}/user-page/user/${pageUserId}`, {
       withCredentials: true,
@@ -39,7 +43,20 @@ function UserPage() {
 
   async function handleCreatePost(event) {
     event.preventDefault();
-    await axios.post(`${apiUrl}/post`, {});
+    const formData = new FormData();
+    formData.append("title", postTitle);
+    if (postImage) {
+      formData.append("image", postImageFile);
+    }
+    formData.append("content", postContent);
+
+    await axios.post(`${apiUrl}/post`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      withCredentials: true,
+    });
+    fetchData();
   }
 
   useEffect(() => {
@@ -60,18 +77,57 @@ function UserPage() {
         </Link>
       </div>
 
-      <div>
-        <h1>{pageUserInfo?.username}</h1>
-        <img src={`${pageUserInfo?.avatarUrl}`} alt="" />
-        <p>{pageUserInfo?.bio}</p>
-        <p>{pageUserInfo?._count.followedBy} Followers</p>
-      </div>
+      <h1>{pageUserInfo?.username}</h1>
+      <img src={`${pageUserInfo?.avatarUrl}`} alt="" />
+      <p>{pageUserInfo?.bio}</p>
+      <p>{pageUserInfo?._count.followedBy} Followers</p>
+
       {userId !== pageUserId ? (
         <button onClick={handleUpdateFollow}>
           {followStatus ? "Unfollow" : "Follow"}
         </button>
       ) : (
-        <form onSubmit={handleCreatePost}></form>
+        <form
+          onSubmit={handleCreatePost}
+          className="space-y-4 border border-gray-300 rounded p-4 my-4 max-w-lg shadow-md"
+        >
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Post Title
+            <input
+              type="text"
+              value={postTitle}
+              onChange={(e) => setPostTitle(e.target.value)}
+              required
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </label>
+
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Post Image (Optional)
+            <input
+              type="file"
+              onChange={(e) => setPostImageFile(e.target.files[0])}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+          </label>
+
+          <label className="block text-gray-700 text-sm font-bold mb-2">
+            Post Content
+            <textarea
+              value={postContent}
+              onChange={(e) => setPostContent(e.target.value)}
+              required
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline h-32"
+            />
+          </label>
+
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
+            Create Post
+          </button>
+        </form>
       )}
 
       <h1 className="text-3xl font-bold text-center mb-8">

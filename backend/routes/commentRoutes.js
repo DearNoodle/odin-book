@@ -4,7 +4,7 @@ const { jwtAuth } = require('./middlewares/routeAuth');
 
 const router = Router();
 
-router.post('/comment', jwtAuth, controller.createComment);
+router.post('/comment/post/:id', jwtAuth, controller.createComment);
 router.delete('/comment/:id', jwtAuth, controller.deleteComment);
 
 module.exports = router;

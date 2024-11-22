@@ -10,7 +10,7 @@ async function createLocalUser(req) {
       password: hashedPassword,
       avatarUrl:
         'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg',
-      bio: "This Person hasn't written no Bio yet",
+      bio: "This Person hasn't written Bio yet",
     },
   });
 }
@@ -22,7 +22,7 @@ async function createGHUser(profile) {
       githubId: profile.id,
       avatarUrl:
         'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg', // Directly on user
-      bio: "This Person hasn't written no Bio yet",
+      bio: "This Person hasn't written Bio yet",
     },
   });
 }
@@ -265,6 +265,58 @@ async function updateFollow(req) {
   }
 }
 
+async function createPost(req) {
+  await prisma.post.create({
+    data: {
+      title: req.body.title,
+      postImageUrl: req.file.path,
+      content: req.body.content,
+      authorId: req.user.id,
+    },
+  });
+}
+
+async function getPostInfo(req) {
+  return await prisma.post.findUnique({
+    where: { id: req.params.id },
+    include: {
+      author: {
+        select: {
+          id: true,
+          username: true,
+          avatarUrl: true,
+        },
+      },
+      comments: {
+        include: {
+          user: {
+            select: {
+              username: true,
+              avatarUrl: true,
+            },
+          },
+        },
+      },
+      _count: {
+        select: {
+          likedBy: true,
+          comments: true,
+        },
+      },
+    },
+  });
+}
+
+async function createComment(req) {
+  await prisma.comment.create({
+    data: {
+      content: req.body.content,
+      userId: req.user.id,
+      postId: req.params.id,
+    },
+  });
+}
+
 module.exports = {
   createLocalUser,
   createGHUser,
@@ -277,6 +329,9 @@ module.exports = {
   getUserPosts,
   getFollowStatus,
   updateFollow,
+  createPost,
+  getPostInfo,
+  createComment,
   // getUsername,
   // getChatMessages,
   // createMessage,

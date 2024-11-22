@@ -25,7 +25,7 @@ function ProfilePage() {
 
     if (imageFile) {
       const formData = new FormData();
-      formData.append("file", imageFile);
+      formData.append("image", imageFile);
 
       try {
         await axios.put(`${apiUrl}/profile/image`, formData, {
@@ -61,10 +61,10 @@ function ProfilePage() {
   useEffect(() => {
     if (!userId) {
       navigate("/");
-    } else {
-      fetchData();
+      return;
     }
-  }, [userId, navigate]);
+    fetchData();
+  }, []);
 
   return (
     <div className="mx-auto px-4 py-8 min-h-screen max-w-7xl">
@@ -129,6 +129,7 @@ function ProfilePage() {
                 accept="image/*"
                 onChange={(e) => setImageFile(e.target.files[0])}
                 className="w-full"
+                required
               />
               <button
                 type="submit"

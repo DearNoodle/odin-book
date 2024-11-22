@@ -17,8 +17,14 @@ async function getUserPageData(req, res) {
   res.json({ userInfo, posts, followStatus });
 }
 
+async function getPostPageData(req, res) {
+  const postInfo = await query.getPostInfo(req);
+  res.send(postInfo);
+}
+
 module.exports = {
   getHomePageData,
   getProfilePageData,
   getUserPageData,
+  getPostPageData,
 };

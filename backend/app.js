@@ -5,6 +5,8 @@ const authRouter = require('./routes/authRoutes');
 const appRouter = require('./routes/appRoutes');
 const fetchRouter = require('./routes/fetchRoutes');
 const profileRouter = require('./routes/profileRoutes');
+const postRouter = require('./routes/postRoutes');
+const commentRouter = require('./routes/commentRoutes');
 const app = express();
 
 app.use(
@@ -28,7 +30,7 @@ app.use(passport.initialize());
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 
-const routers = [authRouter, appRouter, fetchRouter, profileRouter];
+const routers = [authRouter, appRouter, fetchRouter, profileRouter, postRouter, commentRouter];
 
 routers.forEach((router) => {
   app.use('/api', router);

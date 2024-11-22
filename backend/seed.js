@@ -17,7 +17,7 @@ async function main() {
           registeredAt,
           avatarUrl:
             'https://static.vecteezy.com/system/resources/thumbnails/020/765/399/small_2x/default-profile-account-unknown-icon-black-silhouette-free-vector.jpg',
-          bio: "This Person hasn't written no Bio yet",
+          bio: "This Person hasn't written Bio yet",
         },
       });
 
