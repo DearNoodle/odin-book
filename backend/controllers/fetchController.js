@@ -19,7 +19,24 @@ async function getUserPageData(req, res) {
 
 async function getPostPageData(req, res) {
   const postInfo = await query.getPostInfo(req);
-  res.send(postInfo);
+  const likeStatus = await query.getLikeStatus(req);
+  res.json({ postInfo, likeStatus });
+}
+
+async function getFollowsPageData(req, res) {
+  const follows = await query.getFollowedUsers(req);
+  res.send(follows);
+}
+
+async function getChatsPageData(req, res) {
+  const chattedUser = await query.getRecentChattedUser(req);
+  res.send(chattedUser);
+}
+
+async function getChatPageData(req, res) {
+  const username = await query.getUsername(req);
+  const chatMessages = await query.getChatMessages(req);
+  res.json({ username, chatMessages });
 }
 
 module.exports = {
@@ -27,4 +44,7 @@ module.exports = {
   getProfilePageData,
   getUserPageData,
   getPostPageData,
+  getFollowsPageData,
+  getChatsPageData,
+  getChatPageData,
 };

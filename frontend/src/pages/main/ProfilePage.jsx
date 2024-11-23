@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { apiUrl, UserIdContext } from "../App";
-import NavBar from "../components/NavBar";
+import { apiUrl, UserIdContext } from "../../App";
+import NavBar from "../../components/NavBar";
 import axios from "axios";
 
 function ProfilePage() {

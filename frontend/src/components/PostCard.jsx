@@ -9,26 +9,23 @@ function PostCard({ post }) {
       className="bg-white shadow rounded-md p-4 flex items-center justify-between"
     >
       <div>
-        <div className="flex items-center">
-          <Link to={`/user/${post.author.id}`}>
-            {post.author.avatarUrl && (
-              <img
-                src={post.author.avatarUrl}
-                alt={`${post.author.username}'s avatar`}
-                className="w-8 h-8 rounded-full mr-2"
-              />
-            )}
-            <p className="font-semibold">{post.author.username}</p>
-          </Link>
-        </div>
+        <Link to={`/user/${post.author.id}`} className="flex items-center">
+          {post.author.avatarUrl && (
+            <img
+              src={post.author.avatarUrl}
+              alt={`${post.author.username}'s avatar`}
+              className="w-8 h-8 rounded-full mr-2"
+            />
+          )}
+          <p className="font-semibold">{post.author.username}</p>
+        </Link>
         <Link to={`/post/${post.id}`}>
           <h3 className="text-lg font-medium">{post.title}</h3>
           <p>{post.content}</p>
         </Link>
-        <div className="mt-1">
-          <span>{post._count.likedBy} likes</span>{" "}
-          <span>{post._count.comments} comments</span>
-        </div>
+        <p className="mt-1">
+          {post._count.likedBy} likes {post._count.comments} comments
+        </p>
       </div>
       {post.postImageUrl && (
         <img

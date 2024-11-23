@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { apiUrl, UserIdContext } from "../App";
+import { apiUrl, UserIdContext } from "../../App";
 import axios from "axios";
 
 function ChatPage() {
@@ -12,42 +12,29 @@ function ChatPage() {
   const [chatterName, setChatterName] = useState("");
   const messagesEndRef = useRef(null);
 
-  async function getChatterName() {
-    try {
-      const response = await axios.get(`${apiUrl}/user/${chatterId}/name`, {
-        withCredentials: true,
-      });
-      setChatterName(response.data.username);
-    } catch (error) {
-      console.error("Error fetching chatter name:", error);
-    }
-  }
-
-  async function getChatMessages() {
-    const response = await axios.get(`${apiUrl}/message`, {
-      params: {
-        chatterId,
-      },
+  async function fetchData() {
+    const response = await axios.get(`${apiUrl}/chat-page/user/${chatterId}`, {
       withCredentials: true,
     });
-    setChatMessages(response.data);
+    const data = response.data;
+    setChatterName(data.username);
+    setChatMessages(data.chatMessages);
   }
 
   async function sendMessage(event) {
     event.preventDefault();
-    if (message.trim() === "") return;
     setMessage("");
+    if (message.trim() === "") return;
     await axios.post(
-      `${apiUrl}/message`,
+      `${apiUrl}/message/user/${chatterId}`,
       {
-        chatterId,
-        message,
+        content: message,
       },
       {
         withCredentials: true,
       }
     );
-    getChatMessages();
+    fetchData();
   }
 
   useEffect(() => {
@@ -55,10 +42,9 @@ function ChatPage() {
       navigate("/");
       return;
     }
-    getChatterName();
-    getChatMessages();
+    fetchData();
 
-    const intervalId = setInterval(getChatMessages, 1000);
+    const intervalId = setInterval(fetchData, 1000);
     return () => clearInterval(intervalId);
   }, [chatterId]);
 
@@ -69,7 +55,7 @@ function ChatPage() {
   return (
     <div className="container mx-auto px-4 py-8 min-h-screen">
       <Link
-        to="/home"
+        to="/chats"
         className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-2 px-4 rounded-md mb-4 inline-block"
       >
         Back

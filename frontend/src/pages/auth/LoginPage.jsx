@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { apiUrl, UserIdContext } from "../App";
+import { apiUrl, UserIdContext } from "../../App";
 import axios from "axios";
 
 function LoginPage({ fetchUserId }) {

@@ -17,8 +17,14 @@ async function updateFollow(req, res) {
   res.end();
 }
 
+async function updateLike(req, res) {
+  await query.updateLike(req);
+  res.end();
+}
+
 module.exports = {
   getUserInfo,
   getSearchPosts,
   updateFollow,
+  updateLike,
 };

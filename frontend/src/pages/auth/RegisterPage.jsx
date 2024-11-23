@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { apiUrl, UserIdContext } from "../App";
+import { apiUrl, UserIdContext } from "../../App";
 import axios from "axios";
 
 function RegisterPage() {
@@ -22,9 +22,9 @@ function RegisterPage() {
         { withCredentials: true }
       );
       navigate("/");
-      console.log("Register successful");
+      console.alert("Register successful");
     } catch (error) {
-      console.error("Register failed:", error);
+      console.alert("Register failed:", error);
     }
   }
 

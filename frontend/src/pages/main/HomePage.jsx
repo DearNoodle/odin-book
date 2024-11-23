@@ -1,9 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { apiUrl, UserIdContext } from "../App";
+import { apiUrl, UserIdContext } from "../../App";
 import axios from "axios";
-import NavBar from "../components/NavBar";
-import PostCard from "../components/PostCard";
+import NavBar from "../../components/NavBar";
+import PostCard from "../../components/PostCard";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -21,16 +21,17 @@ function HomePage() {
 
   async function handleSearchSubmit(event) {
     event.preventDefault();
-    if (searchKeyword !== "") {
+    const trimmedKeyword = searchKeyword.trim();
+    if (trimmedKeyword !== "") {
       const response = await axios.get(`${apiUrl}/search/posts`, {
         params: {
-          searchKeyword,
+          searchKeyword: trimmedKeyword,
         },
         withCredentials: true,
       });
       setSearchResults(response.data);
     } else {
-      setSearchResults(undefined);
+      setSearchKeyword("");
     }
   }
 

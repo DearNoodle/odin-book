@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { apiUrl, UserIdContext } from "../App";
+import { apiUrl, UserIdContext } from "../../App";
 import axios from "axios";
-import PostCard from "../components/PostCard";
+import PostCard from "../../components/PostCard";
 
 function UserPage() {
   const navigate = useNavigate();
@@ -45,7 +45,7 @@ function UserPage() {
     event.preventDefault();
     const formData = new FormData();
     formData.append("title", postTitle);
-    if (postImage) {
+    if (postImageFile) {
       formData.append("image", postImageFile);
     }
     formData.append("content", postContent);
@@ -81,6 +81,15 @@ function UserPage() {
       <img src={`${pageUserInfo?.avatarUrl}`} alt="" />
       <p>{pageUserInfo?.bio}</p>
       <p>{pageUserInfo?._count.followedBy} Followers</p>
+
+      {userId !== pageUserId && (
+        <Link
+          to={`/chat/user/${pageUserId}`}
+          className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-green-300"
+        >
+          Chat
+        </Link>
+      )}
 
       {userId !== pageUserId ? (
         <button onClick={handleUpdateFollow}>

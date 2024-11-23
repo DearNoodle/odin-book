@@ -1,14 +1,19 @@
 import React, { createContext, useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import MainPage from "./pages/MainPage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import HomePage from "./pages/HomePage";
-import ChatPage from "./pages/ChatPage";
-import FollowsPage from "./pages/FollowsPage";
-import ProfilePage from "./pages/ProfilePage";
-import UserPage from "./pages/UserPage";
-import PostPage from "./pages/PostPage";
+
+import MainPage from "./pages/auth/MainPage";
+import LoginPage from "./pages/auth/LoginPage";
+import RegisterPage from "./pages/auth/RegisterPage";
+
+import HomePage from "./pages/main/HomePage";
+import FollowsPage from "./pages/main/FollowsPage";
+import ChatsPage from "./pages/main/ChatsPage";
+import ProfilePage from "./pages/main/ProfilePage";
+
+import UserPage from "./pages/sub/UserPage";
+import PostPage from "./pages/sub/PostPage";
+import ChatPage from "./pages/sub/ChatPage";
+
 import axios from "axios";
 
 export const apiUrl = "http://localhost:8080/api";
@@ -52,7 +57,8 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/follows" element={<FollowsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/chat/:id" element={<ChatPage />} />
+          <Route path="/chats" element={<ChatsPage />} />
+          <Route path="/chat/user/:id" element={<ChatPage />} />
           <Route path="/user/:id" element={<UserPage />} />
           <Route path="/post/:id" element={<PostPage />} />
         </Routes>

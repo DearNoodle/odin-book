@@ -1,31 +1,36 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { apiUrl, UserIdContext } from "../App";
+import { apiUrl, UserIdContext } from "../../App";
 import axios from "axios";
-import NavBar from "../components/NavBar";
+import NavBar from "../../components/NavBar";
 function FollowsPage() {
   const navigate = useNavigate();
   const { userId, setUserId } = useContext(UserIdContext);
-  const [userFollows, setUserFollows] = useState([]);
+  const [followedUsers, setFollowedUsers] = useState([]);
   const [searchKeyword, setSearchKeyword] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchedUsers, setSearchedUsers] = useState([]);
 
-  async function getFollowedUsers() {
-    const response = await axios.get(`${apiUrl}/follows`, {
+  async function fetchData() {
+    const response = await axios.get(`${apiUrl}/follows-page`, {
       withCredentials: true,
     });
-    setUserFollows(response.data);
+    setFollowedUsers(response.data);
   }
 
   async function handleSearch(event) {
     event.preventDefault();
-    const response = await axios.get(`${apiUrl}/search/user`, {
-      params: {
-        searchKeyword,
-      },
-      withCredentials: true,
-    });
-    setSearchResults(response.data);
+    const trimmedKeyword = searchKeyword.trim();
+    if (trimmedKeyword !== "") {
+      const response = await axios.get(`${apiUrl}/search/users`, {
+        params: {
+          searchKeyword: trimmedKeyword,
+        },
+        withCredentials: true,
+      });
+      setSearchedUsers(response.data);
+    } else {
+      setSearchKeyword("");
+    }
   }
 
   useEffect(() => {
@@ -33,7 +38,7 @@ function FollowsPage() {
       navigate("/");
       return;
     }
-    getFollowedUsers();
+    fetchData();
   }, []);
 
   return (
@@ -52,20 +57,20 @@ function FollowsPage() {
           />
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
             Search
           </button>
         </form>
       </div>
 
-      <h2 className="text-xl font-semibold mb-4">
-        {searchResults.length > 0 ? "Search Results" : "Your Follows"}
-      </h2>
+      <p className="text-xl font-semibold mb-4">
+        {searchedUsers.length > 0 ? "Search Results" : "Your Follows"}
+      </p>
 
       <div className="space-y-4">
-        {searchResults.length > 0 ? (
-          searchResults.map((user) => (
+        {searchedUsers.length > 0 ? (
+          searchedUsers.map((user) => (
             <div
               key={user.id}
               className="bg-white shadow rounded-md p-4 flex items-center justify-between"
@@ -75,14 +80,14 @@ function FollowsPage() {
               </p>
               <Link
                 to={`/user/${user.id}`}
-                className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
+                className="bg-purple-500 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 "
               >
                 View
               </Link>
             </div>
           ))
-        ) : userFollows.length > 0 ? (
-          userFollows.map((user) => (
+        ) : followedUsers.length > 0 ? (
+          followedUsers.map((user) => (
             <div
               key={user.id}
               className="bg-white shadow rounded-md p-4 flex items-center justify-between"
@@ -91,10 +96,10 @@ function FollowsPage() {
                 {user.username.charAt(0).toUpperCase() + user.username.slice(1)}
               </p>
               <Link
-                to={`/chat/${user.id}`}
-                className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
+                to={`/user/${user.id}`}
+                className="bg-purple-500 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2"
               >
-                Chat
+                View
               </Link>
             </div>
           ))

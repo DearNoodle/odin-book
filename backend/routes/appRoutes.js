@@ -6,10 +6,8 @@ const router = Router();
 
 router.get('/user/:id', jwtAuth, controller.getUserInfo);
 
-router.get('/search/posts', jwtAuth, controller.getSearchPosts);
-
 router.put('/follow/user/:id', jwtAuth, controller.updateFollow);
 
-// router.get('/search/users', jwtAuth, controller.getSearchUsers);
+router.put('/like/post/:id', jwtAuth, controller.updateLike);
 
 module.exports = router;
