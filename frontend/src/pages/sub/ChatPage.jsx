@@ -13,28 +13,39 @@ function ChatPage() {
   const messagesEndRef = useRef(null);
 
   async function fetchData() {
-    const response = await axios.get(`${apiUrl}/chat-page/user/${chatterId}`, {
-      withCredentials: true,
-    });
-    const data = response.data;
-    setChatterName(data.username);
-    setChatMessages(data.chatMessages);
+    try {
+      const response = await axios.get(
+        `${apiUrl}/chat-page/user/${chatterId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      const data = response.data;
+      setChatterName(data.username);
+      setChatMessages(data.chatMessages);
+    } catch (error) {
+      console.error("Error fetching chat data:", error);
+    }
   }
 
   async function sendMessage(event) {
     event.preventDefault();
     setMessage("");
     if (message.trim() === "") return;
-    await axios.post(
-      `${apiUrl}/message/user/${chatterId}`,
-      {
-        content: message,
-      },
-      {
-        withCredentials: true,
-      }
-    );
-    fetchData();
+    try {
+      await axios.post(
+        `${apiUrl}/message/user/${chatterId}`,
+        {
+          content: message,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      fetchData();
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   }
 
   useEffect(() => {
@@ -76,7 +87,7 @@ function ChatPage() {
                 >
                   <p
                     className={`bg-${
-                      message.fromUserId === userId ? "blue" : "gray"
+                      message.fromUserId === userId ? "purple" : "blue"
                     }-500 text-white p-2 rounded-lg inline-block max-w-xs`}
                   >
                     {message.content}
@@ -93,7 +104,7 @@ function ChatPage() {
         </div>
 
         <form onSubmit={sendMessage} className="mt-4">
-          <div className="flex space-x-2">
+          <div className="flex space-x-8">
             <input
               type="text"
               placeholder="Type your message..."
@@ -103,7 +114,7 @@ function ChatPage() {
             />
             <button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-r-md"
+              className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-r-md"
             >
               Send
             </button>

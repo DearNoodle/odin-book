@@ -13,29 +13,37 @@ function HomePage() {
   const [searchResults, setSearchResults] = useState();
 
   async function fetchData() {
-    const response = await axios.get(`${apiUrl}/home-page`, {
-      withCredentials: true,
-    });
-    setRecentPosts(response.data);
+    try {
+      const response = await axios.get(`${apiUrl}/home-page`, {
+        withCredentials: true,
+      });
+      setRecentPosts(response.data);
+    } catch (error) {
+      console.error("Error fetching recent posts:", error);
+    }
   }
 
   async function handleSearchSubmit(event) {
     event.preventDefault();
     const trimmedKeyword = searchKeyword.trim();
     if (trimmedKeyword !== "") {
-      const response = await axios.get(`${apiUrl}/search/posts`, {
-        params: {
-          searchKeyword: trimmedKeyword,
-        },
-        withCredentials: true,
-      });
-      setSearchResults(response.data);
+      try {
+        const response = await axios.get(`${apiUrl}/search/posts`, {
+          params: {
+            searchKeyword: trimmedKeyword,
+          },
+          withCredentials: true,
+        });
+        setSearchResults(response.data);
+      } catch (error) {
+        console.error("Error performing search:", error);
+      }
     } else {
       setSearchKeyword("");
     }
   }
 
-  async function handleKeywordChange(event) {
+  function handleKeywordChange(event) {
     setSearchKeyword(event.target.value);
     if (event.target.value === "") {
       setSearchResults(undefined);
@@ -55,7 +63,7 @@ function HomePage() {
       <NavBar userId={userId} setUserId={setUserId} />
 
       <div className="mb-6">
-        <form onSubmit={handleSearchSubmit} className="flex space-x-2">
+        <form onSubmit={handleSearchSubmit} className="flex space-x-8">
           <input
             type="text"
             placeholder="Discover Posts..."
@@ -65,7 +73,7 @@ function HomePage() {
           />
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px- rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-300"
           >
             Search
           </button>

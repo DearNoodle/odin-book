@@ -11,23 +11,31 @@ function FollowsPage() {
   const [searchedUsers, setSearchedUsers] = useState([]);
 
   async function fetchData() {
-    const response = await axios.get(`${apiUrl}/follows-page`, {
-      withCredentials: true,
-    });
-    setFollowedUsers(response.data);
+    try {
+      const response = await axios.get(`${apiUrl}/follows-page`, {
+        withCredentials: true,
+      });
+      setFollowedUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching followed users:", error);
+    }
   }
-
+  
   async function handleSearch(event) {
     event.preventDefault();
     const trimmedKeyword = searchKeyword.trim();
     if (trimmedKeyword !== "") {
-      const response = await axios.get(`${apiUrl}/search/users`, {
-        params: {
-          searchKeyword: trimmedKeyword,
-        },
-        withCredentials: true,
-      });
-      setSearchedUsers(response.data);
+      try {
+        const response = await axios.get(`${apiUrl}/search/users`, {
+          params: {
+            searchKeyword: trimmedKeyword,
+          },
+          withCredentials: true,
+        });
+        setSearchedUsers(response.data);
+      } catch (error) {
+        console.error("Error performing user search:", error);
+      }
     } else {
       setSearchKeyword("");
     }
@@ -46,7 +54,7 @@ function FollowsPage() {
       <NavBar userId={userId} setUserId={setUserId} />
 
       <div className="mb-6">
-        <form onSubmit={handleSearch} className="flex space-x-2">
+        <form onSubmit={handleSearch} className="flex space-x-8">
           <input
             type="text"
             placeholder="Search for Users..."

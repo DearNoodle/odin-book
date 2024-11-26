@@ -31,7 +31,7 @@ function PostCard({ post }) {
         <img
           src={post.postImageUrl}
           alt={`Post ${post.id}`}
-          className="w-24 h-24 rounded-md ml-4 object-cover"
+          className="w-24 h-24 rounded-xl ml-4 object-cover"
         />
       )}
     </div>

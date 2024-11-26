@@ -10,10 +10,14 @@ function ChatsPage() {
   const [recentChattedUsers, setRecentChattedUsers] = useState([]);
 
   async function fetchData() {
-    const response = await axios.get(`${apiUrl}/chats-page`, {
-      withCredentials: true,
-    });
-    setRecentChattedUsers(response.data);
+    try {
+      const response = await axios.get(`${apiUrl}/chats-page`, {
+        withCredentials: true,
+      });
+      setRecentChattedUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching recent chats:", error);
+    }
   }
 
   useEffect(() => {
@@ -44,7 +48,7 @@ function ChatsPage() {
                 to={`/chat/user/${user.id}`}
                 className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2"
               >
-                View
+                Chat
               </Link>
             </div>
           ))
