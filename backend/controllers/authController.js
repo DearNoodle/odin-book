@@ -42,7 +42,7 @@ async function loginGHUser(req, res) {
     maxAge: expireTimeValue,
     sameSite: 'none',
   });
-  res.redirect('http://localhost:5173');
+  res.redirect('https://dearnoodle-odin-book.netlify.app');
 }
 
 async function logoutUser(req, res) {

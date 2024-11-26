@@ -36,7 +36,7 @@ const jwtStrategyOptions = {
 const githubStrategyOptions = {
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: 'http://localhost:8080/api/login/github/callback',
+  callbackURL: 'https://dearnoodle-odin-book.up.railway.app/api/login/github/callback',
 };
 
 const verifyLocal = async (username, password, done) => {
