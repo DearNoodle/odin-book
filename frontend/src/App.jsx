@@ -16,7 +16,7 @@ import ChatPage from "./pages/sub/ChatPage";
 
 import axios from "axios";
 
-export const apiUrl = "http://dearnoodle-odin-book.up.railway.app/api";
+export const apiUrl = "https://dearnoodle-odin-book.up.railway.app/api";
 export const UserIdContext = createContext(null);
 
 function App() {
