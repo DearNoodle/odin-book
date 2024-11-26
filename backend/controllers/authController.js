@@ -29,7 +29,7 @@ async function loginLocalUser(req, res) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: expireTimeValue,
-    // sameSite: 'none',
+    sameSite: 'none',
   });
   res.status(200).send('Login successful');
 }
@@ -40,7 +40,7 @@ async function loginGHUser(req, res) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     maxAge: expireTimeValue,
-    // sameSite: 'none',
+    sameSite: 'none',
   });
   res.redirect('http://localhost:5173');
 }
@@ -50,7 +50,7 @@ async function logoutUser(req, res) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     expires: new Date(0),
-    // sameSite: 'none',
+    sameSite: 'none',
   });
   res.status(200).send('Logout successful');
 }
