@@ -15,7 +15,7 @@ function MainPage() {
 
   return (
     <div className="container mx-auto px-4 py-16 text-center">
-      <h1 className="text-5xl font-bold mb-6">Welcome to WhatsUpp!</h1>
+      <h1 className="text-5xl font-bold mb-6">Welcome to Fakebook!</h1>
       <p className="text-lg text-gray-700 mb-10">
         Share your thoughts, ideas, and stories with the world.
       </p>
