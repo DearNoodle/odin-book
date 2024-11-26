@@ -13,7 +13,7 @@ const configCloudinary = () => {
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'messaging-app',
+    folder: 'odin-book',
     allowedFormats: ['jpg', 'png', 'jpeg'],
   },
 });
