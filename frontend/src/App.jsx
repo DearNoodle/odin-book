@@ -16,7 +16,7 @@ import ChatPage from "./pages/sub/ChatPage";
 
 import axios from "axios";
 
-export const apiUrl = "https://odin-photo-tagging-app.onrender.com/api";
+export const apiUrl = "https://odin-book-4g6t.onrender.com/api";
 export const UserIdContext = createContext(null);
 
 function App() {

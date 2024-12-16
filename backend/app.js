@@ -11,7 +11,7 @@ const searchRouter = require('./routes/searchRoutes');
 const messageRouter = require('./routes/messageRoutes');
 const app = express();
 
-const apiUrl = 'https://odin-photo-tagging-app.onrender.com/api';
+const apiUrl = 'https://odin-book-4g6t.onrender.com/api';
 module.exports = apiUrl;
 
 app.use(
