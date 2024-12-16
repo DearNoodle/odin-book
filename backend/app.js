@@ -11,6 +11,9 @@ const searchRouter = require('./routes/searchRoutes');
 const messageRouter = require('./routes/messageRoutes');
 const app = express();
 
+const apiUrl = 'https://odin-photo-tagging-app.onrender.com/api';
+module.exports = apiUrl;
+
 app.use(
   cors({
     origin: 'https://dearnoodle-odin-book.netlify.app',
@@ -47,8 +50,8 @@ routers.forEach((router) => {
   app.use('/api', router);
 });
 
-const PORT = process.env.PORT || 8080;
-// '0.0.0.0' host % 8080 POST required for railway deploy
+const PORT = process.env.PORT || 10000;
+// '0.0.0.0' host required for deploy
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Listening on port ${PORT}!`);
 });

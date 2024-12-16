@@ -6,6 +6,7 @@ const GitHubStrategy = require('passport-github2').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const { PrismaClient } = require('@prisma/client');
 const query = require('../models/query');
+const apiUrl = require('../app');
 
 const prisma = new PrismaClient();
 
@@ -36,7 +37,7 @@ const jwtStrategyOptions = {
 const githubStrategyOptions = {
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: 'https://dearnoodle-odin-book.up.railway.app/api/login/github/callback',
+  callbackURL: `${apiUrl}/login/github/callback`,
 };
 
 const verifyLocal = async (username, password, done) => {
